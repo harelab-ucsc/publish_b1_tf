@@ -1,0 +1,13 @@
+<launch>
+    <arg name="child_frame" default="base"/>
+    <arg name="parent_frame" default="map"/>
+
+    <node pkg="publish_b1_tf" type="publish" name="publish_b1_tf"/>
+
+    <param name="child_frame" value="$(arg child_frame)"/>
+    <param name="parent_frame" value="$(arg parent_frame)"/>
+
+    <!-- TODO: Get actual distance to camera, use URDF -->
+    <node pkg="tf" type="static_transform_publisher" name="robot_to_camera1" args="0.42 0.0 0 0 0.0 0 /base /nx1_camera_forward_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="robot_to_camera2" args="0.42 0.0 0 0 1.57 0 /base /nx1_camera_down_link 100"/>
+</launch>
