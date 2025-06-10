@@ -10,4 +10,6 @@
     <!-- TODO: Get actual distance to camera, use URDF -->
     <node pkg="tf" type="static_transform_publisher" name="robot_to_camera1" args="0.42 0.0 0 0 0.0 0 /base /nx1_camera_forward_link 100"/>
     <node pkg="tf" type="static_transform_publisher" name="robot_to_camera2" args="0.42 0.0 0 0 1.57 0 /base /nx1_camera_down_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="robot_to_camera3" args="-0.12 0.12 0 1.57 0 0 /base /nx2_camera_left_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="robot_to_camera4" args="-0.12 -0.12 0 -1.57 0 0 /base /nx2_camera_right_link 100"/>
 </launch>
