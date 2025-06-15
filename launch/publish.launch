@@ -7,9 +7,19 @@
     <param name="child_frame" value="$(arg child_frame)"/>
     <param name="parent_frame" value="$(arg parent_frame)"/>
 
-    <!-- TODO: Get actual distance to camera, use URDF -->
-    <node pkg="tf" type="static_transform_publisher" name="robot_to_camera1" args="0.42 0.0 0 0 0.0 0 /base /nx1_camera_forward_link 100"/>
-    <node pkg="tf" type="static_transform_publisher" name="robot_to_camera2" args="0.42 0.0 0 0 1.57 0 /base /nx1_camera_down_link 100"/>
-    <node pkg="tf" type="static_transform_publisher" name="robot_to_camera3" args="-0.12 0.12 0 1.57 0 0 /base /nx2_camera_left_link 100"/>
-    <node pkg="tf" type="static_transform_publisher" name="robot_to_camera4" args="-0.12 -0.12 0 -1.57 0 0 /base /nx2_camera_right_link 100"/>
+    <arg name="user_debug" default="false"/>
+  
+    <!-- Load B1 URDF that specifes transforms and physical appearans -->
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find b1_description)/xacro/robot.xacro' DEBUG:=$(arg user_debug)"/>
+
+    <!-- Publish robot_description loaded from URDF -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+        <param name="publish_frequency" type="double" value="1000.0"/>
+    </node>
+
+    <node pkg="tf" type="static_transform_publisher" name="camera1" args="0 0 0 0 0.0 0 /head_camera_1_link /nx1_camera_forward_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="camera2" args="0 0 0 0 1.57 0 /head_camera_2_link /nx1_camera_down_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="camera3" args="0 0 0 1.57 0 0 /left_side_camera_link /nx2_camera_left_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="camera4" args="0 0 0 -1.57 0 0 /right_side_camera_link /nx2_camera_right_link 100"/>
+
 </launch>
