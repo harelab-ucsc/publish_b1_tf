@@ -17,9 +17,9 @@
         <param name="publish_frequency" type="double" value="1000.0"/>
     </node>
 
-    <node pkg="tf" type="static_transform_publisher" name="camera1" args="0 0 0 0 0.0 0 /head_camera_1_link /nx1_camera_forward_link 100"/>
-    <node pkg="tf" type="static_transform_publisher" name="camera2" args="0 0 0 0 1.57 0 /head_camera_2_link /nx1_camera_down_link 100"/>
-    <node pkg="tf" type="static_transform_publisher" name="camera3" args="0 0 0 1.57 0 0 /left_side_camera_link /nx2_camera_left_link 100"/>
-    <node pkg="tf" type="static_transform_publisher" name="camera4" args="0 0 0 -1.57 0 0 /right_side_camera_link /nx2_camera_right_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="camera1" args="0 0 0 0 0 -1.57 /head_camera_1_link /nx1_camera_forward_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="camera2" args="0 0 0 0 1.57 -1.57 /head_camera_2_link /nx1_camera_down_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="camera3" args="0 0 0 1.57 0 -1.57 /left_side_camera_link /nx2_camera_left_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="camera4" args="0 0 0 -1.57 0 -1.57 /right_side_camera_link /nx2_camera_right_link 100"/>
 
 </launch>
