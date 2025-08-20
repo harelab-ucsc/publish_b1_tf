@@ -21,5 +21,6 @@
     <node pkg="tf" type="static_transform_publisher" name="camera2" args="0 0 0 0 1.57 -1.57 /head_camera_2_link /nx1_camera_down_link 100"/>
     <node pkg="tf" type="static_transform_publisher" name="camera3" args="0 0 0 1.57 0 -1.57 /left_side_camera_link /nx2_camera_left_link 100"/>
     <node pkg="tf" type="static_transform_publisher" name="camera4" args="0 0 0 -1.57 0 -1.57 /right_side_camera_link /nx2_camera_right_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="camera5" args="0 0 0 0 1.57 -1.57 /tail_camera_link /nx3_camera_backward_link 100"/>
 
 </launch>
