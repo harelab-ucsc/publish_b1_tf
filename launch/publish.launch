@@ -4,6 +4,8 @@
 
     <node pkg="publish_b1_tf" type="publish" name="publish_b1_tf"/>
 
+    <node pkg="publish_b1_tf" type="model_run" name="publish_model_run"/>
+
     <param name="child_frame" value="$(arg child_frame)"/>
     <param name="parent_frame" value="$(arg parent_frame)"/>
 
