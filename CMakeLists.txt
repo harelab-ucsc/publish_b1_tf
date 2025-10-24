@@ -36,10 +36,14 @@ include_directories(
 )
 
 add_executable(publish src/publish.cpp)
+add_executable(joint_command src/joint_command.cpp)
 
 target_link_libraries(publish
  libunitree_legged_sdk.so
  ${catkin_LIBRARIES}
 )
 
+target_link_libraries(joint_command ${catkin_LIBRARIES} unitree_legged_sdk)
+
 add_dependencies(publish ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(joint_command ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

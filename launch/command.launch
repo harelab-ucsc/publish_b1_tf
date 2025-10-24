@@ -1,0 +1,31 @@
+<launch>
+    <!-- Change to command.lauch required arguments relative to robot joints-->
+    <arg name="child_frame" default="base"/>
+    <arg name="parent_frame" default="map"/>
+
+    <node pkg="publish_b1_tf" type="joint_command" name="publish_b1_command"/>
+
+    <param name="child_frame" value="$(arg child_frame)"/>
+    <param name="parent_frame" value="$(arg parent_frame)"/>
+
+    <arg name="user_debug" default="false"/>
+  
+    <!-- Load B1 URDF that specifes transforms and physical appearans -->
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find b1_description)/xacro/robot.xacro' DEBUG:=$(arg user_debug)"/>
+
+    <!-- Publish robot_description loaded from URDF -->
+    <!-- <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+        <param name="publish_frequency" type="double" value="1000.0"/>
+    </node> -->
+
+    <!-- Publish robot_description loaded from URDF -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_command_publisher">
+        <param name="publish_frequency" type="double" value="1000.0"/>
+    </node>
+
+    <!-- B1 robot model and joint states -->
+    <include file="$(find publish_b1_tf)/launch/publish.launch" />
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find publish_b1_tf)/rviz/dog.rviz" />
+
+</launch>
