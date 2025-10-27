@@ -13,3 +13,35 @@ Follow the directions from here: [link](https://github.com/unitreerobotics/unitr
 4. check that `catkin_make` works, if not, you've done something wrong. Likely not used the B1 branch for the SDK or the ros_to_real or both. Or you messed with the directory structure.
 5. Clone this repo into the src folder of the catkin workspace.
 6. Run `catkin_make` and `source ./devel/setup.bash`, etc. Run the launch file using `roslaunch publish_b1_tf publish.launch` 
+
+# Resources
+
+## `unitree_legged_sdk`
+
+Please see the [`unitree_legged_sdk` for B1](
+    https://github.com/unitreerobotics/unitree_legged_sdk/tree/B1
+) for more information on interacting with Unitree B1 quadruped robots via
+Unitree's convenient API.
+
+### State variables
+
+This module reads state variables found in the [`comm.h` file](
+    https://github.com/unitreerobotics/unitree_legged_sdk/tree/B1
+) of this SDK. Specifically, it references:
+
+* `MotorState`
+* `HighState`
+
+## ROS(1)
+
+This node is currently built for use with ROS (as opposed to "ROS2").
+
+### `sensor_msgs`
+
+Please see the [`sensor_msgs` documentation](
+    https://docs.ros.org/en/noetic/api/sensor_msgs/html/index-msg.html
+) for more information on sensor `Message` types that can be easily published
+through ROS. Some sensor messages used in this node include:
+
+* [JointState](https://docs.ros.org/en/noetic/api/sensor_msgs/html/msg/JointState.html)
+
