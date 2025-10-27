@@ -60,10 +60,15 @@ void Custom::RobotControl()
     const string leg_names[4] = {"FR", "FL", "RR", "RL"};
     /** NOTE - Motor/Joint state members:
      *
+     * state.motorState.mode                                (?)
      * state.motorState.q = angle                           (rad/s)
      * state.motorState.dq = velocity                       (rad/s)
      * state.motorState.ddq = acceleration                  (rad/s/s)
      * state.motorState.tauEst = estimated output torque    (Nm)
+     * state.motorState.q_raw = angle                       (rad/s)
+     * state.motorState.dq_raw = velocity                   (rad/s)
+     * state.motorState.ddq_raw = acceleration              (rad/s/s)
+     * state.motorState.temparature                         (?)
      *
      * joint_state.name     (string[])
      * joint_state.position (float64[])
