@@ -58,16 +58,36 @@ void Custom::RobotControl()
     joint_state.position.resize(12);
 
     const string leg_names[4] = {"FR", "FL", "RR", "RL"};
-
+    /** NOTE - Motor/Joint state members:
+     *
+     * state.motorState.q = angle                           (rad/s)
+     * state.motorState.dq = velocity                       (rad/s)
+     * state.motorState.ddq = acceleration                  (rad/s/s)
+     * state.motorState.tauEst = estimated output torque    (Nm)
+     *
+     * joint_state.name     (string[])
+     * joint_state.position (float64[])
+     * joint_state.velocity (float64[])
+     * joint_state.effort   (float64[])
+     */
     for (uint8_t i = 0; i < 4; i++) {
+      // Hip joint.
       joint_state.name[i*3] = leg_names[i] + "_hip_joint";
       joint_state.position[i*3] = state.motorState[i*3].q;
+      joint_state.velocity[i*3] = state.motorState[i*3].dq;
+      joint_state.effort[i*3] = state.motorState[i*3].tauEst;
 
+      // Thigh joint.
       joint_state.name[i*3+1] = leg_names[i] + "_thigh_joint";
       joint_state.position[i*3+1] = state.motorState[i*3+1].q;
+      joint_state.velocity[i*3+1] = state.motorState[i*3+1].dq;
+      joint_state.effort[i*3+1] = state.motorState[i*3+1].tauEst;
 
+      // Calf joint.
       joint_state.name[i*3+2] = leg_names[i] + "_calf_joint";
       joint_state.position[i*3+2] = state.motorState[i*3+2].q;
+      joint_state.velocity[i*3+2] = state.motorState[i*3+2].dq;
+      joint_state.effort[i*3+2] = state.motorState[i*3+2].tauEst;
     }
 
     //send the joint state
