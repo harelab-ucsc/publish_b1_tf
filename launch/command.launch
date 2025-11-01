@@ -26,6 +26,8 @@
     <node pkg="tf" type="static_transform_publisher" name="fake_map" args="0 0 0 0 0 0 /map /base 100"/>
     <node pkg="tf" type="static_transform_publisher" name="fake_base" args="0 0 0 0 0 0 /base /trunk 100"/>
 
+    <node pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" name="joint_state_publisher"/>
+
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find publish_b1_tf)/rviz/dog.rviz" />
 
 </launch>
