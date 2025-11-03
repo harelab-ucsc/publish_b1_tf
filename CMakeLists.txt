@@ -17,6 +17,8 @@ catkin_package(
 #  DEPENDS system_lib
 )
 
+find_package(Qt5 REQUIRED Core Gui Widgets)
+
 ###########
 ## Build ##
 ###########
@@ -33,6 +35,7 @@ link_directories(${CMAKE_SOURCE_DIR}/unitree_ros_to_real/unitree_legged_sdk/lib/
 include_directories(
   ${catkin_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/unitree_ros_to_real/unitree_legged_sdk/include
+  ${Qt5Widgets_INCLUDE_DIRS}
 )
 
 add_executable(publish src/publish.cpp)
@@ -43,7 +46,7 @@ target_link_libraries(publish
  ${catkin_LIBRARIES}
 )
 
-target_link_libraries(joint_command ${catkin_LIBRARIES} unitree_legged_sdk)
+target_link_libraries(joint_command ${catkin_LIBRARIES} unitree_legged_sdk Qt5::Widgets)
 
 add_dependencies(publish ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(joint_command ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
