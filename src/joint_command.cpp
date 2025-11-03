@@ -11,11 +11,12 @@
 using namespace std;
 using namespace UNITREE_LEGGED_SDK;
 
-class Custom
+class B1Interface
 {
 public:
-    Custom() : safe(LeggedType::B1),
-               udp(LOWLEVEL, 8090, "192.168.123.10", 8007)
+    B1Interface(): 
+        safe(LeggedType::B1),
+        udp(LOWLEVEL, 8090, "192.168.123.10", 8007)
     {
         udp.InitCmdData(cmd);
     }
@@ -26,26 +27,54 @@ public:
     Safety safe;
     UDP udp;
     LowCmd cmd = {0};
+    LowState state = {0};
     float joint_positions[12] = {0};
 
     float dt = 0.002; // 0.001~0.01
 };
 
-void Custom::UDPUpdate()
+void B1Interface::UDPUpdate()
 {
     udp.Recv();
     udp.Send();
 }
 
-void Custom::ReadSliderGUI(const sensor_msgs::JointState::ConstPtr& guiMsg)
+void B1Interface::ReadSliderGUI(const sensor_msgs::JointState::ConstPtr& guiMsg)
 {
     for (size_t i = 0; i < guiMsg->position.size() && i < 12; ++i) {
         joint_positions[i] = guiMsg->position[i];  // Store the joint position from the GUI
     }
- }
+}
 
-void Custom::RobotControl()
+void B1Interface::RobotControl()
 {
+    udp.GetRecv(state);
+
+    // publish joints
+    static ros::NodeHandle node;
+    static ros::Publisher joint_pub = node.advertise<sensor_msgs::JointState>("joint_readings", 1);
+
+    sensor_msgs::JointState joint_state;
+    joint_state.header.stamp = ros::Time::now();
+    joint_state.name.resize(12);
+    joint_state.position.resize(12);
+
+    const string leg_names[4] = {"FR", "FL", "RR", "RL"};
+
+    for (uint8_t i = 0; i < 4; i++) {
+      joint_state.name[i*3] = leg_names[i] + "_hip_joint";
+      joint_state.position[i*3] = state.motorState[i*3].q;
+
+      joint_state.name[i*3+1] = leg_names[i] + "_thigh_joint";
+      joint_state.position[i*3+1] = state.motorState[i*3+1].q;
+
+      joint_state.name[i*3+2] = leg_names[i] + "_calf_joint";
+      joint_state.position[i*3+2] = state.motorState[i*3+2].q;
+    }
+
+    //send the joint state
+    joint_pub.publish(joint_state);
+
     for (uint8_t i = 0; i < 12; i++) {
         cmd.motorCmd[i].mode = 0; // FOC mode?
         cmd.motorCmd[i].q = joint_positions[i];  // * gear ratio 8.66
@@ -55,8 +84,7 @@ void Custom::RobotControl()
         cmd.motorCmd[i].tau = 0.0;
     }
     safe.PositionLimit(cmd);
-    ROS_WARN("Joint 4 pos: %f\n", cmd.motorCmd[3].q);
-    udp.SetSend(cmd);  // Send the motor commands via UDP
+    // udp.SetSend(cmd);  // Send the motor commands via UDP
 }
 
 int main(int argc, char** argv)
@@ -65,13 +93,13 @@ int main(int argc, char** argv)
     ros::NodeHandle node;
     ROS_INFO("Running RobotControl...");
 
-    Custom custom;
+    B1Interface interface;
     InitEnvironment();
-    LoopFunc loop_control("control_loop", custom.dt, boost::bind(&Custom::RobotControl, &custom));
-    LoopFunc loop_udp("udp_update", custom.dt, 3, boost::bind(&Custom::UDPUpdate, &custom));
+    LoopFunc loop_control("control_loop", interface.dt, boost::bind(&B1Interface::RobotControl, &interface));
+    LoopFunc loop_udp("udp_update", interface.dt, 3, boost::bind(&B1Interface::UDPUpdate, &interface));
 
     // message queue of 1
-    ros::Subscriber sub = node.subscribe("joint_states", 1, &Custom::ReadSliderGUI, &custom);
+    ros::Subscriber sub = node.subscribe("joint_states", 1, &B1Interface::ReadSliderGUI, &interface);
     
     loop_control.start();
     loop_udp.start();
