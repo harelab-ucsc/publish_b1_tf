@@ -1,12 +1,8 @@
 <launch>
     <!-- Change to command.lauch required arguments relative to robot joints-->
-    <arg name="child_frame" default="base"/>
-    <arg name="parent_frame" default="map"/>
+
 
     <node pkg="publish_b1_tf" type="joint_command" name="publish_b1_command"/>
-
-    <param name="child_frame" value="$(arg child_frame)"/>
-    <param name="parent_frame" value="$(arg parent_frame)"/>
 
     <arg name="user_debug" default="false"/>
   
