@@ -121,20 +121,30 @@ void B1Interface::RobotControl()
 
     for (uint8_t i = 0; i < 12; i++) {
         if (getEnabledMotors(i)) {
-            ROS_WARN("MOTOR %d ENABLED: %f\n", i, joint_positions[i]);
-            cmd.motorCmd[i].mode = 0; // FOC mode?
             cmd.motorCmd[i].q = joint_positions[i];  // * gear ratio 8.66
             cmd.motorCmd[i].Kp = 20.0;
             cmd.motorCmd[i].Kd = 2.0;
             cmd.motorCmd[i].dq = 0.0;
             cmd.motorCmd[i].tau = 0.0;
         } else {
-            cmd.motorCmd[i] = {0};
+            cmd.motorCmd[i].q = 0;
+            cmd.motorCmd[i].Kp = 0;
+            cmd.motorCmd[i].Kd = 0;
+            cmd.motorCmd[i].dq = 0;
+            cmd.motorCmd[i].tau = 0;
         }
     }
     safe.PositionLimit(cmd);
-    safe.PowerProtect(cmd, state, 1); // 1 is 10% power limit, 10 is 100%
-    // udp.SetSend(cmd);  // Send the motor commands via UDP
+    
+#ifdef PRINT_MOTOR_ENABLED_B1
+    for (int i = 0; i < 12; i++) {
+        if (cmd.motorCmd[i].Kp != 0 || cmd.motorCmd[i].Kd != 0 || cmd.motorCmd[i].tau != 0) {
+            ROS_WARN("MOTOR %d ENABLED: %f (%f) %d\n", i, cmd.motorCmd[i].q, joint_positions[i], getEnabledMotors(i));
+        }
+    }
+#endif
+
+    udp.SetSend(cmd);  // Send the motor commands via UDP
 }
 
 int main(int argc, char** argv)
